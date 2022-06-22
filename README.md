@@ -1,4 +1,4 @@
-# Frontend Meru Ecommerce Online 🛍
+# Frontend TESLO-SHOP Ecommerce Online 🛍
 
 ![Captura de la app](public/products/1740408-00-A_1.jpg)
 
@@ -13,8 +13,8 @@
 - JavaScript,
 - React,
 - Next,
-- Redux
-- Tailwind
+- Context API
+- Material
 
 ## Pre-requirements 📋
 
@@ -45,7 +45,7 @@ _Tools I've used in this project_
 - [Npm](https://www.npmjs.com/) - Npm
 - [React](https://es.reactjs.org/) - React
 - [NextJs](https://nextjs.org/) - NextJs
-- [Tailwind](https://tailwindcss.com/) - Tailwind
+- [Material](https://mui.com/) - Material UI
 
 ## Author ✒️
 
