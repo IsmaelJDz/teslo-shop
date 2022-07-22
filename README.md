@@ -8,6 +8,28 @@
 
 \*\* Frontend Technologies 🛠
 
+# Next.js Teslo App
+
+for run in local you need the local database
+
+```
+docker-compose up -d
+```
+
+- MongoDB URL Local:
+  yarn install
+  yarn dev
+
+```
+  mongodb://localhost:27017/teslodb
+```
+
+## fill the database for test with dummy data
+
+```
+  http://localhost:3000/api/seed
+```
+
 - HTML5
 - CSS3
 - JavaScript,
