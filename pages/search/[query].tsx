@@ -2,6 +2,7 @@
 // - Only if you need to pre-render a page whose data must be fetched at request time
 import { GetServerSideProps } from "next";
 import {
+  Box,
   Card,
   CardActionArea,
   CardMedia,
@@ -20,9 +21,11 @@ import { IProduct } from "../../interfaces";
 
 interface Props {
   products: IProduct[];
+  foundProducts: boolean;
+  query: string;
 }
 
-const SearchPage: NextPage<Props> = ({ products }) => {
+const SearchPage: NextPage<Props> = ({ products, foundProducts, query }) => {
   //const { products, isLoading } = useProducts("/search/cybertruck");
 
   return (
@@ -31,11 +34,28 @@ const SearchPage: NextPage<Props> = ({ products }) => {
       pageDescription="Encuentra los mejores productos de Teslo aqui"
     >
       <Typography variant="h1" component="h1">
-        Buscar producto
+        Buscar productos
       </Typography>
-      <Typography variant="h2" sx={{ mb: 1 }}>
-        ABC -- 123
-      </Typography>
+
+      {foundProducts ? (
+        <Typography variant="h2" sx={{ mb: 1 }} textTransform="capitalize">
+          Termino: {query}
+        </Typography>
+      ) : (
+        <Box display="flex">
+          <Typography variant="h2" sx={{ mb: 1 }}>
+            No encontramos ningun producto
+          </Typography>
+          <Typography
+            variant="h2"
+            sx={{ mb: 1 }}
+            color="secondary"
+            textTransform="capitalize"
+          >
+            {query}
+          </Typography>
+        </Box>
+      )}
 
       <ProductList products={products} />
 
@@ -57,12 +77,20 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   }
 
   let products = await dbProducts.getProductsByTerm(query);
+  const foundProducts = products.length > 0;
+
+  if (!foundProducts) {
+    //products = await dbProducts.getAllProducts();
+    products = await dbProducts.getProductsByTerm("shirt");
+  }
 
   //TODO: return other products
 
   return {
     props: {
       products,
+      foundProducts,
+      query,
     },
   };
 };
