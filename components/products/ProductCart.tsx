@@ -5,6 +5,7 @@ import {
   Card,
   CardActionArea,
   CardMedia,
+  Chip,
   Grid,
   Link,
   Typography,
@@ -35,9 +36,21 @@ const ProductCart: FC<Props> = ({ product }) => {
     >
       <Card>
         <NextLink href={`/product/${product.slug}`} passHref prefetch={false}>
-        {/* <NextLink href={`/product/slug`} passHref prefetch={false}> */}
+          {/* <NextLink href={`/product/slug`} passHref prefetch={false}> */}
           <Link>
             <CardActionArea>
+              {product.inStock === 0 && (
+                <Chip
+                  color="primary"
+                  label="No hay disponibles"
+                  sx={{
+                    position: "absolute",
+                    zIndex: 99,
+                    top: "10px",
+                    left: "10px",
+                  }}
+                />
+              )}
               <CardMedia
                 component="img"
                 image={`/products/${productImage}`}
