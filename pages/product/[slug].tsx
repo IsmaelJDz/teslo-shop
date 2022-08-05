@@ -10,7 +10,7 @@ import { Box, Button, Chip, Grid, Typography } from "@mui/material";
 import { ShopLayout } from "../../components/layout";
 import { ProductSlide, SizeSelector } from "../../components/products";
 import { ItemCounter } from "../../components/ui";
-import { initialData } from "../../database/products";
+import { initialData } from "../../database/seed-data";
 import { useProducts } from "../../hooks";
 import { ICartProduct, IProduct, ISizes } from "../../interfaces";
 import { dbProducts } from "../../database";
