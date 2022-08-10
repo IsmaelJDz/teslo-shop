@@ -4,6 +4,7 @@ import { CartContext, CartReducer } from "./";
 import { ICartProduct } from "../../interfaces";
 
 export interface CartState {
+  isLoaded: boolean;
   cart: ICartProduct[];
   numberOfItems: number;
   subTotal: number;
@@ -15,8 +16,8 @@ interface UIProviderProps {
   children: React.ReactNode | React.ReactNode[];
 }
 
-//TODO: try to parse the object: create function to parse the object
 const CART_INITIAL_STATE: CartState = {
+  isLoaded: Cookie.get("cart")?.length === 0 ? false : true,
   cart: Cookie.get("cart") ? JSON.parse(Cookie.get("cart")!) : [],
   numberOfItems: 0,
   subTotal: 0,

@@ -1,4 +1,5 @@
 import React from "react";
+import { GetServerSideProps } from "next";
 import {
   Box,
   Button,
@@ -11,6 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import { ShopLayout } from "../../components/layout/ShopLayout";
+import { jwt } from "../../utils";
 
 type Props = {};
 
@@ -78,3 +80,30 @@ export default function Address({}: Props) {
     </ShopLayout>
   );
 }
+
+// check page in SSR
+// export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+//   const { token = "" } = req.cookies;
+//   let userId = "";
+//   let isValidToken = false;
+
+//   try {
+//     await jwt.isValidToken(token);
+//     isValidToken = true;
+//   } catch (error) {
+//     isValidToken = false;
+//   }
+
+//   if (!isValidToken) {
+//     return {
+//       redirect: {
+//         destination: "/auth/login?p=/checkout/address",
+//         permanent: false,
+//       },
+//     };
+//   }
+
+//   return {
+//     props: {},
+//   };
+// };
