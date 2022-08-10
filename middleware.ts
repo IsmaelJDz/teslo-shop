@@ -5,6 +5,8 @@ import * as jose from "jose";
 export async function middleware(req: NextRequest) {
   if (req.nextUrl.pathname.startsWith("/checkout")) {
     const token = req.cookies.get("token");
+    //TEST
+    //OTHER COMMENT
 
     try {
       await jose.jwtVerify(
