@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useContext } from "react";
 import NextLink from "next/link";
 import {
   Typography,
@@ -12,8 +12,27 @@ import {
 } from "@mui/material";
 import { ShopLayout } from "../../components/layout/ShopLayout";
 import { CartList, OrderSummary } from "../../components/cart";
+import { CartContext } from "../../context";
+import { countries } from "../../utils";
 
 const SummaryPage = () => {
+  const { shippingAddress, numberOfItems } = useContext(CartContext);
+
+  if (!shippingAddress) {
+    return <></>;
+  }
+
+  const {
+    firstName,
+    lastName,
+    address,
+    address2 = "",
+    city,
+    country,
+    phone,
+    zip,
+  } = shippingAddress;
+
   return (
     <ShopLayout
       title="Resumen de la orden"
@@ -30,7 +49,10 @@ const SummaryPage = () => {
           {/* <CartSummary /> */}
           <Card className="cart-summary">
             <CardContent>
-              <Typography variant="h2">Resumen (3 productos)</Typography>
+              <Typography variant="h2">
+                Resumen ({numberOfItems}{" "}
+                {numberOfItems === 1 ? "producto" : "productos"})
+              </Typography>
               <Divider sx={{ my: 1 }} />
 
               <Box display="flex" justifyContent="space-between">
@@ -42,11 +64,19 @@ const SummaryPage = () => {
                 </NextLink>
               </Box>
 
-              <Typography>Ismael Barrios</Typography>
-              <Typography>323 Algun lugar</Typography>
-              <Typography>Stittsville, HYA 245</Typography>
-              <Typography>Canada</Typography>
-              <Typography>+1 23123123 </Typography>
+              <Typography>
+                {firstName} {lastName}
+              </Typography>
+              <Typography>
+                {address} {address2 ? `, ${address2}` : ""}
+              </Typography>
+              <Typography>
+                {city} {zip}
+              </Typography>
+              <Typography>
+                {countries.find((c) => c.code === country)?.name}
+              </Typography>
+              <Typography> {phone} </Typography>
 
               <Divider sx={{ my: 1 }} />
 
