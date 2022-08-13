@@ -1,9 +1,10 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import NextLink from "next/link";
 import {
   Box,
   Button,
   Chip,
+  Divider,
   Grid,
   Link,
   TextField,
@@ -17,6 +18,8 @@ import axios from "axios";
 import { ErrorOutline } from "@mui/icons-material";
 import { AuthContext } from "../../context";
 import { useRouter } from "next/router";
+import { signIn, getSession, getProviders } from "next-auth/react";
+import { GetServerSideProps } from "next";
 
 type Props = {};
 
@@ -26,6 +29,7 @@ type InputsForm = {
 };
 
 export default function LoginPage({}: Props) {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -33,25 +37,37 @@ export default function LoginPage({}: Props) {
   } = useForm<InputsForm>();
   const [showError, setShowError] = useState(false);
   const { loginUser } = useContext(AuthContext);
-  const router = useRouter();
+
+  const [providers, setProviders] = useState<any>({});
 
   const onLoginUser = async (data: InputsForm) => {
-    const { email, password } = data;
+    //const { email, password } = data;
     setShowError(false);
 
-    const isValidLogin = await loginUser(email, password);
+    await signIn("credentials", {
+      email: data.email,
+      password: data.password,
+    });
 
-    if (!isValidLogin) {
-      setShowError(true);
-      setTimeout(() => {
-        setShowError(false);
-      }, 3000);
-      return;
-    }
+    // const isValidLogin = await loginUser(email, password);
 
-    const destination = router.query.p?.toString() || "/";
-    router.replace(destination);
+    // if (!isValidLogin) {
+    //   setShowError(true);
+    //   setTimeout(() => {
+    //     setShowError(false);
+    //   }, 3000);
+    //   return;
+    // }
+
+    // const destination = router.query.p?.toString() || "/";
+    // router.replace(destination);
   };
+
+  useEffect(() => {
+    getProviders().then((prov) => {
+      setProviders(prov);
+    });
+  }, []);
 
   return (
     <AuthLayout title="Ingresar">
@@ -137,9 +153,54 @@ export default function LoginPage({}: Props) {
                 <Link underline="always">No tienes cuenta?</Link>
               </NextLink>
             </Grid>
+
+            <Grid item xs={12} display="flex" flexDirection="column">
+              <Divider sx={{ width: "100%", mb: 2 }} />
+              {Object.values(providers).map((provider: any) => {
+                if (provider.id === "credentials")
+                  return <div key="credentials"></div>;
+
+                return (
+                  <Button
+                    key={provider.id}
+                    variant="outlined"
+                    fullWidth
+                    color="primary"
+                    sx={{
+                      mb: 1,
+                    }}
+                    onClick={() => signIn(provider.id)}
+                  >
+                    {provider.name}
+                  </Button>
+                );
+              })}
+            </Grid>
           </Grid>
         </Box>
       </form>
     </AuthLayout>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async ({
+  req,
+  query,
+}) => {
+  const session = await getSession({ req });
+
+  const { p = "/" } = query;
+
+  if (session) {
+    return {
+      redirect: {
+        destination: p.toString(),
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
+};

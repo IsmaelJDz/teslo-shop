@@ -45,7 +45,7 @@ const getAddressFromCookies = (): FormData => {
 
 export default function Address({}: Props) {
   const router = useRouter();
-  const { updateAddress } = useContext(CartContext);
+  const { updateAddress, shippingAddress } = useContext(CartContext);
 
   const {
     register,
@@ -66,10 +66,13 @@ export default function Address({}: Props) {
   });
 
   const onSubmitAddress = (data: FormData) => {
-    console.log("data", data);
     updateAddress(data);
     router.push("/checkout/summary");
   };
+
+  // if (!shippingAddress) {
+  //   return <></>;
+  // }
 
   return (
     <ShopLayout
