@@ -31,6 +31,8 @@ type FormData = {
 };
 
 const getAddressFromCookies = (): FormData => {
+  console.log("country", Cookies.get("country"));
+
   return {
     firstName: Cookies.get("firstName") || "",
     lastName: Cookies.get("lastName") || "",
@@ -71,6 +73,10 @@ export default function Address({}: Props) {
   };
 
   // if (!shippingAddress) {
+  //   return <></>;
+  // }
+
+  // if (typeof window === "undefined") {
   //   return <></>;
   // }
 
@@ -166,7 +172,7 @@ export default function Address({}: Props) {
                 select
                 variant="filled"
                 label="Pais"
-                defaultValue={Cookies.get("country") || countries[0].code}
+                defaultValue={Cookies.get("country")}
                 {...register("country", {
                   required: "This field is required",
                 })}

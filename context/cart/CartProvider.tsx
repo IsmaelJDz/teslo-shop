@@ -1,8 +1,10 @@
 import { FC, useEffect, useReducer } from "react";
 import Cookie from "js-cookie";
 import { CartContext, CartReducer } from "./";
-import { ICartProduct } from "../../interfaces";
+import { ICartProduct, IOrder } from "../../interfaces";
 import Cookies from "js-cookie";
+import { tesloApi } from "../../api";
+import axios from "axios";
 
 export interface CartState {
   isLoaded: boolean;
@@ -164,6 +166,57 @@ export const CartProvider: FC<UIProviderProps> = ({ children }) => {
     });
   };
 
+  const createOrder = async (): Promise<{
+    hasError: boolean;
+    message: string;
+  }> => {
+    if (!state.shippingAddress) {
+      throw new Error("No shipping address");
+    }
+
+    const body: IOrder = {
+      orderItems: state.cart.map((p) => ({
+        ...p,
+        size: p.size!,
+      })),
+      shippingAddress: state.shippingAddress,
+      numberOfItems: state.numberOfItems,
+      subTotal: state.subTotal,
+      tax: state.tax,
+      total: state.total,
+      isPaid: false,
+    };
+
+    try {
+      const { data } = await tesloApi.post<IOrder>("/orders", body);
+
+      dispatch({
+        type: "[Cart] - Order complete",
+      });
+
+      return {
+        hasError: false,
+        message: data._id!,
+      };
+    } catch (error) {
+      console.log(error);
+      if (axios.isAxiosError(error)) {
+        const { message } = error.response?.data as { message: string };
+
+        return {
+          hasError: true,
+          //message: error.response?.data as string,
+          message,
+        };
+      }
+
+      return {
+        hasError: true,
+        message: "Something went wrong",
+      };
+    }
+  };
+
   return (
     <CartContext.Provider
       value={{
@@ -172,6 +225,7 @@ export const CartProvider: FC<UIProviderProps> = ({ children }) => {
         updateCartQuantity,
         removeProductFromCart,
         updateAddress,
+        createOrder,
       }}
     >
       {children}

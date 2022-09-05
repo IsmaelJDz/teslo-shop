@@ -3,11 +3,23 @@ import React, { useContext } from "react";
 import { CartContext } from "../../context";
 
 import { currency } from "../../utils";
+import { FC } from "react";
 
-type Props = {};
+type Props = {
+  orderValues?: {
+    numberOfItems: number;
+    subTotal: number;
+    total: number;
+    tax: number;
+  };
+};
 
-export function OrderSummary({}: Props) {
+export function OrderSummary({ orderValues }: Props) {
   const { numberOfItems, subTotal, total, tax } = useContext(CartContext);
+
+  const summaryValues = orderValues
+    ? orderValues
+    : { numberOfItems, subTotal, total, tax };
 
   return (
     <Grid container>
@@ -16,7 +28,8 @@ export function OrderSummary({}: Props) {
       </Grid>
       <Grid item xs={6} display="flex" justifyContent="end">
         <Typography>
-          {numberOfItems} {numberOfItems > 1 ? "productos" : "producto"}
+          {summaryValues.numberOfItems}{" "}
+          {summaryValues.numberOfItems > 1 ? "productos" : "producto"}
         </Typography>
       </Grid>
 
@@ -24,7 +37,7 @@ export function OrderSummary({}: Props) {
         <Typography>Subtotal</Typography>
       </Grid>
       <Grid item xs={6} display="flex" justifyContent="end">
-        <Typography> {`${currency.format(subTotal)}`} </Typography>
+        <Typography> {`${currency.format(summaryValues.subTotal)}`}</Typography>
       </Grid>
 
       <Grid item xs={6}>
@@ -33,7 +46,7 @@ export function OrderSummary({}: Props) {
         </Typography>
       </Grid>
       <Grid item xs={6} display="flex" justifyContent="end">
-        <Typography> {`${currency.format(tax)}`} </Typography>
+        <Typography> {`${currency.format(summaryValues.tax)}`} </Typography>
       </Grid>
 
       <Grid item xs={6} sx={{ mt: 2 }}>
@@ -41,8 +54,7 @@ export function OrderSummary({}: Props) {
       </Grid>
       <Grid item xs={6} sx={{ mt: 2 }} display="flex" justifyContent="end">
         <Typography variant="subtitle1">
-          {" "}
-          {`${currency.format(total)}`}{" "}
+          {`${currency.format(summaryValues.total)}`}
         </Typography>
       </Grid>
     </Grid>
