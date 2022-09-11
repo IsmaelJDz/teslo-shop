@@ -31,8 +31,6 @@ type FormData = {
 };
 
 const getAddressFromCookies = (): FormData => {
-  console.log("country", Cookies.get("country"));
-
   return {
     firstName: Cookies.get("firstName") || "",
     lastName: Cookies.get("lastName") || "",
