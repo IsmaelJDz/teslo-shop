@@ -110,6 +110,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
       };
     } catch (err) {
       if (axios.isAxiosError(err)) {
+        //test mssage
         // const error = err as AxiosError;
         // return {
         //   hasError: true,
